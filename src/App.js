@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import {Switch, Route, NavLink} from "react-router-dom";
-import HomePage from './components/HomePage'
-import LoginPage from "./components/LoginPage";
-import Blogsposts from "./components/BlogPosts";
-import BlogsPostPage from "./components/BlogPostPage";
+import { Switch, Route, Redirect} from "react-router-dom";
+import Navigation from './Components/Navigation'
+import HomePage from './Pages/HomePage'
+import LoginPage from "./Pages/LoginPage";
+import Blogposts from "./Pages/BlogPosts";
+import BlogPostPage from "./Pages/BlogPostPage";
+
+
 
 function App() {
   // We houden in de state bij of iemand is "ingelogd" (simpele versie)
@@ -12,14 +15,8 @@ function App() {
 
   return (
     <div>
-        <nav>
-            <ul>
-                <li><NavLink to="/">Home</NavLink></li>
-                <li><NavLink to="/login">Login</NavLink></li>
-                <li><NavLink to="/blogposts">Blogposts</NavLink></li>
-                <li><NavLink to="/blogposts/:blogId">Blog</NavLink></li>
-            </ul>
-        </nav>
+        <Navigation
+            isAuth={isAuthenticated} toggleAuth={toggleIsAuthenticated}/>
         <Switch>
             <Route exact path="/">
                 <HomePage/>
@@ -27,17 +24,18 @@ function App() {
         </Switch>
         <Switch>
             <Route path="/login">
-                <LoginPage/>
+                <LoginPage
+                isAuth={isAuthenticated} toggleAuth={toggleIsAuthenticated}/>
             </Route>
         </Switch>
         <Switch>
             <Route exact path="/blogposts">
-                <Blogsposts/>
+                {isAuthenticated === true ? <Blogposts/> : <Redirect to="/"/>}
             </Route>
         </Switch>
         <Switch>
             <Route path="/blogposts/:blogId">
-                <BlogsPostPage/>
+                {isAuthenticated === true ? <BlogPostPage/> : <Redirect to="/"/>}
             </Route>
         </Switch>
     </div>
